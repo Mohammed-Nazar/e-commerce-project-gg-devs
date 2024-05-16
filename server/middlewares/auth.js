@@ -12,17 +12,18 @@ const isAuthenticated = async (req, res, next) => {
 
 
 const isCustomer = (req, res, next) => {
-   const role = req.session.user.role;
-  if (role === 'customer' || role === 'admin') {
+   const isAdmin = req.session.user.isAdmin;
+    
+  if (isAdmin || req.session.user) {
     return next();
   }
   res.status(403).json({ error: "This action is unauthorized" });
 };
 
 const isAdmin = (req, res, next) => {
-   const role = req.session.user.role;
+   const isAdmin = req.session.user.isAdmin;
 
-  if (role === 'admin') {
+  if (isAdmin) {
     return next();
   }
   res.status(403).json({ error: "This action is unauthorized" });
