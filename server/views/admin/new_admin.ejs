@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>New Admin</title>
+  <%- include('../partials/head') %>
+</head>
+<body class="with-welcome-text">
+  <div class="container-scroller">
+    <%- include('../partials/navbar') %>
+    <div class="container-fluid page-body-wrapper">
+      <%- include('../partials/sidebar') %>
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <h3 class="page-title">Create New Admin</h3>
+          <% if (typeof successMessage !== 'undefined') { %>
+            <div class="alert alert-success"><%= successMessage %></div>
+          <% } %>
+          <form action="/admin/new-admin" method="POST">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Admin</button>
+          </form>
+        </div>
+        <%- include('../partials/footer') %>
+      </div>
+    </div>
+  </div>
+  <%- include('../partials/scripts') %>
+</body>
+</html>
