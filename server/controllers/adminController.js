@@ -1,32 +1,5 @@
 const Admin = require('../models/Admin');
-const bcrypt = require('bcrypt');
-
-// Render Signin Page
-exports.getSignIn = (req, res) => {
-  res.render('admin/signin');
-};
-
-// Signin logic,, need 2 work on validtion later 
-exports.postSignIn = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const admin = await Admin.findOne({ email });
-    if (!admin) {
-      return res.status(400).render('admin/signin', { errorMessage: 'Invalid email or password.' });
-    }
-
-    const isMatch = await admin.comparePassword(password);
-    if (!isMatch) {
-      return res.status(400).render('admin/signin', { errorMessage: 'Invalid email or password.' });
-    }
-
-    req.session.admin = admin;
-    res.redirect('/admin/dashboard');
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-};
+// const bcrypt = require('bcrypt');
 
 // Render Dashboard Page , crud 4 items later 
 exports.getDashboard = (req, res) => {
@@ -67,15 +40,5 @@ exports.getOrders = (req, res) => {
 // Render Customers Page , after building the customers , will fetch em from db in this view 
 exports.getCustomers = (req, res) => {
   res.render('admin/customers', { adminEmail: req.session.admin.email });
-};
-
-// Handlin Signout
-exports.getSignOut = (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).send(err.message);
-    }
-    res.redirect('/admin/signin');
-  });
 };
 

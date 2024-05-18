@@ -7,6 +7,7 @@ const session = require('express-session');
 
 const connectToMongo = require('./db/connection');
 const adminRoutes = require('./routes/adminRoutes');
+const signRoutes = require('./routes/signRoutes');
 
 const app = express();
 const port = process.env.NODE_ENV === 'test' ? process.env.NODE_LOCAL_TEST_PORT : process.env.NODE_LOCAL_PORT;
@@ -40,10 +41,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.get('/', (req, res) => {
   if (req.session && req.session.admin) {
     res.redirect('/admin/dashboard');
+  } else if (req.session && req.session.customer) {
+    res.redirect('/customer/home');
   } else {
-    res.redirect('/admin/signin');
+    res.redirect('/signin');
   }
 });
+
+// Sign in Routes
+app.use('/', signRoutes);
 
 // Admin Routes
 app.use('/admin', adminRoutes);
