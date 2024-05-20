@@ -1,21 +1,16 @@
 const mongoose = require("mongoose");
 
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME, TEST_DB_HOST } =
-  process.env;
+const { MONGODB_USER, MONGODB_PASSWORD, DB_HOST, DB_PORT, MONGODB_DATABASE, TEST_DB_HOST } = process.env;
 
-const DB_URI = `mongodb://${DB_USER}:${DB_PASSWORD}@${
-  process.env.NODE_ENV === "test" ? TEST_DB_HOST : DB_HOST
-}:${DB_PORT}/${DB_NAME}?authSource=admin`;
-
-const url = DB_URI;
+const DB_URI = `mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${process.env.NODE_ENV === "test" ? TEST_DB_HOST : DB_HOST}:${DB_PORT}/${MONGODB_DATABASE}?authSource=admin`;
 
 const connectToMongo = () => {
-  mongoose.connect(url, { useNewUrlParser: true });
+  mongoose.connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-  db = mongoose.connection;
+  const db = mongoose.connection;
 
   db.once("open", () => {
-    console.log("Database connected: ", url);
+    console.log("Database connected: ", DB_URI);
   });
 
   db.on("error", (err) => {
