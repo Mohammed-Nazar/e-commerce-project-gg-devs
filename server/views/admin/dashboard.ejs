@@ -83,7 +83,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <!-- make a route with get post req for the items to store them in db  -->
-                      <form action="/admin/items" method="POST" enctype="multipart/form-data">
+                      <form action="/admin/new-item" method="post">
                         <div class="modal-body">
                           <div class="form-group">
                             <label for="title">Item Title</label>
@@ -91,7 +91,7 @@
                           </div>
                           <div class="form-group">
                             <label for="image">Image</label>
-                            <input type="file" class="form-control" id="image" name="image" required>
+                            <input type="text" class="form-control" id="image" name="image" required>
                           </div>
                           <div class="form-group">
                             <label for="price">Price</label>
