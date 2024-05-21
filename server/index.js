@@ -8,6 +8,7 @@ const session = require('express-session');
 const connectToMongo = require('./db/connection');
 const adminRoutes = require('./routes/adminRoutes');
 const signRoutes = require('./routes/signRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 
 const app = express();
 const port = process.env.NODE_ENV === 'test' ? process.env.NODE_LOCAL_TEST_PORT : process.env.NODE_LOCAL_PORT;
@@ -54,6 +55,7 @@ app.use('/', signRoutes);
 // Admin Routes
 app.use('/admin', adminRoutes);
 
+app.use('/cart', cartRoutes)
 // Serve static files (this should be after  routes to avoid conflicts otherwise html files will render m)
 app.use(express.static(path.join(__dirname, 'public')));
 
