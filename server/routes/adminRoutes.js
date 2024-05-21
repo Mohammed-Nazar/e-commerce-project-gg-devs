@@ -20,6 +20,10 @@ router.post('/new-admin', adminController.postNewAdmin);
 // Create New item
 router.post("/new-item", itemControllers.createItem);
 
+// Delete Item
+router.post("/item/delete/:id", itemControllers.deleteItem);
+router.post("/item/edit/:id", itemControllers.updateItem);
+
 
 // Orders Route
 router.get('/orders', adminController.getOrders);
