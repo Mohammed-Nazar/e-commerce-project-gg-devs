@@ -1,5 +1,5 @@
 const Admin = require('../models/Admin');
-const Customer = require('../models/Customer');
+const Customer = require('../models/customer');
 
 // Render Signin Page
 exports.getSignIn = (req, res) => {

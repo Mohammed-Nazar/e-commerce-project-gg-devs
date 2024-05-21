@@ -1,9 +1,11 @@
 const Admin = require('../models/Admin');
+const { getItems } = require('./itemControllers');
 // const bcrypt = require('bcrypt');
 
 // Render Dashboard Page , crud 4 items later 
-exports.getDashboard = (req, res) => {
-  res.render('admin/dashboard', { items: [], adminEmail: req.session.admin.email });
+exports.getDashboard = async (req, res) => {
+ let items = await getItems();
+  res.render('admin/dashboard', { items: items, adminEmail: req.session.admin.email , messageItem: req.session.itemMsg || ""});
 };
 
 // Render New Admin Page for creating a new admin

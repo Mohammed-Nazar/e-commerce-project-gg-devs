@@ -61,9 +61,9 @@ app.use('/customer', customerRoutes);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Catch all route to render 404 page
-app.use((req, res) => {
-  res.status(404).render('404');
-});
+// app.use((req, res) => {
+//   res.status(404).render('404');
+// });
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

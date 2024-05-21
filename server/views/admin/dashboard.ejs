@@ -1,132 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Admin Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
   <%- include('../partials/head') %>
 </head>
+
 <body class="with-welcome-text">
   <div class="container-scroller">
     <%- include('../partials/navbar') %>
-    <div class="container-fluid page-body-wrapper">
-      <%- include('../partials/sidebar') %>
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="home-tab">
-                <div class="d-sm-flex align-items-center justify-content-between border-bottom">
-                  <h4 class="card-title">Item Management</h4>
-                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">
-                    Add Item
-                  </button>
-                </div>
-                <div class="tab-content tab-content-basic">
-                  <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
-                    <div class="row">
-                      <div class="col-lg-12 d-flex flex-column">
-                        <div class="row flex-grow">
-                          <div class="col-12 col-lg-12 grid-margin stretch-card">
-                            <div class="card card-rounded">
-                              <div class="card-body">
-                                <div class="d-sm-flex justify-content-between align-items-start">
-                                  <div>
-                                    <h4 class="card-title card-title-dash">Items</h4>
+      <div class="container-fluid page-body-wrapper">
+        <%- include('../partials/sidebar') %>
+          <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="home-tab">
+                    <div class="d-sm-flex align-items-center justify-content-between border-bottom">
+                      <h4 class="card-title">Item Management</h4>
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#addItemModal">
+                        Add Item
+                      </button>
+                    </div>
+                    <div class="tab-content tab-content-basic">
+                      <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview">
+                        <div class="row">
+                          <div class="col-lg-12 d-flex flex-column">
+                            <div class="row flex-grow">
+                              <div class="col-12 col-lg-12 grid-margin stretch-card">
+                                <div class="card card-rounded">
+                                  <div class="card-body">
+                                    <div class="d-sm-flex justify-content-between align-items-start">
+                                      <div>
+                                        <h4 class="card-title card-title-dash">Items</h4>
+                                      </div>
+                                    </div>
+                                    <!--  -->
+                                    <div id="messageItem">
+                                      <% if(messageItem == 1){ %>
+                                      <div class="alert alert-success" role="alert">
+                                        Item added Successfully
+                                      </div>
+                                      <%}%>
+                                      <% if(messageItem == 2){ %>
+                                      <div class="alert alert-danger" role="alert">
+                                        Item deleted Successfully
+                                      </div>
+                                      <%}%>
+                                      <% if(messageItem == 3){ %>
+                                      <div class="alert alert-warning" role="alert">
+                                        Item Updated Successfully
+                                      </div>
+                                      <%}%>
+                                      </div>
+                                      <!--  -->
+                                      <script>
+                                            document.addEventListener("DOMContentLoaded", () => {
+                                              const messageElement = document.getElementById('messageItem');
+                                              setTimeout(() => {
+                                                
+                                                if (messageElement) {
+                                                  messageElement.innerHTML = "";
+                                                }
+                                              }, 3000); // 5000 milliseconds = 5 seconds
+                                            });
+                                          </script>
+                                            <div class="table-responsive mt-4">
+                                              <table class="table select-table">
+                                                <thead>
+                                                  <tr>
+                                                    <th>ID</th>
+                                                    <th>Title</th>
+                                                    <th>Description</th>
+                                                    <th>Price</th>
+                                                    <th>Actions</th>
+                                                  </tr>
+                                                </thead>
+                                                <!-- // needs to work on controllers 2 fetch em here  -->
+                                                <tbody>
+                                                  <% items.forEach(function(item) { %>
+                                                    <tr>
+                                                      <td>
+                                                        <%= item._id %>
+                                                      </td>
+                                                      <td>
+                                                        <%= item.title %>
+                                                      </td>
+                                                      <td>
+                                                        <%= item.description %>
+                                                      </td>
+                                                      <td>$<%= item.price %>
+                                                      </td>
+                                                      <td>
+                                                        <!-- Edit Button -->
+                                                        <button type="button" class="btn btn-sm btn-warning"
+                                                          data-toggle="modal" data-target="#editModal<%= item._id %>">
+                                                          <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <!-- Delete Button Trigger Modal -->
+                                                        <button type="button" class="btn btn-sm btn-danger"
+                                                          data-toggle="modal" data-target="#deleteModal<%= item._id %>">
+                                                          <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                      </td>
+                                                    </tr>
+                                                    <% }); %>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                            <!-- <a href="/admin/items" class="btn btn-primary mt-4">Manage Items</a> -->
                                   </div>
                                 </div>
-                                <div class="table-responsive mt-4">
-                                  <table class="table select-table">
-                                    <thead>
-                                      <tr>
-                                        <th>ID</th>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>Price</th>
-                                        <th>Actions</th>
-                                      </tr>
-                                    </thead>
-
-                                    <!-- // needs to work on controllers 2 fetch em here  -->
-                                    <tbody>
-                                      <% items.forEach(function(item) { %>
-                                        <tr>
-                                          <td><%= item._id %></td>
-                                          <td><%= item.title %></td>
-                                          <td><%= item.description %></td>
-                                          <td>$<%= item.price %></td>
-                                          <td>
-                                 <!-- // edit will be edit popup form same as the add item form copy it n change its id . and replace words(edit n delete) with icons better  -->
-                                            <a href="/admin/items/edit/<%= item._id %>" class="btn btn-sm btn-warning">Edit</a>
-                                            <form action="/admin/items/delete/<%= item._id %>" method="POST" style="display:inline;">
-                                              <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                            </form>
-                                          </td>
-                                        </tr>
-                                      <% }); %>
-                                    </tbody>
-                                  </table>
-                                </div>
-                                <!-- <a href="/admin/items" class="btn btn-primary mt-4">Manage Items</a> -->
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <!-- Add Item Modal -->
-                <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="addItemModalLabel">Add New Item</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <!-- Modals for Deletion Confirmation -->
+                    <% items.forEach(function(item) { %>
+                      <div class="modal fade" id="deleteModal<%= item._id %>" tabindex="-1" role="dialog"
+                        aria-labelledby="deleteModalLabel<%= item._id %>" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteModalLabel<%= item._id %>">Confirm Deletion</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              Are you sure you want to delete the item "<%= item.title %>"?
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <form action="/admin/item/delete/<%= item._id %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <!-- make a route with get post req for the items to store them in db  -->
-                      <form action="/admin/items" method="POST" enctype="multipart/form-data">
-                        <div class="modal-body">
-                          <div class="form-group">
-                            <label for="title">Item Title</label>
-                            <input type="text" class="form-control" id="title" name="title" required>
+                      <% }); %>
+                      <!--END OF THE MODAL-->
+
+                      <!--EDIT MODAL-->
+                      <% items.forEach(function(item) { %>
+                      <div class="modal fade" id="editModal<%= item._id %>" tabindex="-1" aria-labelledby="editModalLabel"
+                      aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel">Edit Item</h5>
+                            <sub style="margin-left: 5px;">item id: <%= item._id %></sub>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                              aria-label="Close"></button>
                           </div>
-                          <div class="form-group">
-                            <label for="image">Image</label>
-                            <input type="file" class="form-control" id="image" name="image" required>
-                          </div>
-                          <div class="form-group">
-                            <label for="price">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" required>
-                          </div>
-                          <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                          </div>
-                          <div class="form-group">
-                            <label for="availableCount">Available Count</label>
-                            <input type="number" class="form-control" id="availableCount" name="availableCount" required>
-                          </div>
-                          <div class="form-group">
-                            <label for="genre">Genre/Category</label>
-                            <input type="text" class="form-control" id="genre" name="genre" required>
-                          </div>
+                          <!-- make a route with get post req for the items to store them in db  -->
+                          <form action="/admin/item/edit/<%= item._id %>" method="post">
+                            <div class="modal-body">
+                              <div class="form-group">
+                                <label for="title">Item Title</label>
+                                <input type="text" class="form-control" id="title" name="title"  value="<%= item.title %>" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="image">Image</label>
+                                <input type="text" class="form-control" id="image" name="image" value="<%= item.image %>" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="price">Price</label>
+                                <input type="number" class="form-control" id="price" name="price" value="<%= item.price %>" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3" required
+                                  ><%= item.description %></textarea>
+                              </div>
+                              <div class="form-group">
+                                <label for="availableCount">Available Count</label>
+                                <input type="number" class="form-control" id="availableCount" name="availableCount"
+                                   value="<%= item.availableCount %>" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="genre">Genre/Category</label>
+                                <input type="text" class="form-control" id="genre" name="genre"  value="<%= item.genre %>" required>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                          </form>
                         </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary">Add Item</button>
-                        </div>
-                      </form>
+                      </div>
                     </div>
+                    <% }); %>
+                    <!--End of edit modal-->
+
+                        <!-- Add Item Modal -->
+                        <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel"
+                          aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="addItemModalLabel">Add New Item</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                  aria-label="Close"></button>
+                              </div>
+                              <!-- make a route with get post req for the items to store them in db  -->
+                              <form action="/admin/new-item" method="post">
+                                <div class="modal-body">
+                                  <div class="form-group">
+                                    <label for="title">Item Title</label>
+                                    <input type="text" class="form-control" id="title" name="title" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="image">Image</label>
+                                    <input type="text" class="form-control" id="image" name="image" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="price">Price</label>
+                                    <input type="number" class="form-control" id="price" name="price" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3"
+                                      required></textarea>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="availableCount">Available Count</label>
+                                    <input type="number" class="form-control" id="availableCount" name="availableCount"
+                                      required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="genre">Genre/Category</label>
+                                    <input type="text" class="form-control" id="genre" name="genre" required>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary">Add Item</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- End of Add Item Modal -->
                   </div>
                 </div>
-                <!-- End of Add Item Modal -->
               </div>
             </div>
+            <%- include('../partials/footer') %>
           </div>
-        </div>
-        <%- include('../partials/footer') %>
       </div>
-    </div>
   </div>
   <%- include('../partials/scripts') %>
 </body>
+
 </html

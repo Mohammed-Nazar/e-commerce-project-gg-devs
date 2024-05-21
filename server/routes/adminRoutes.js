@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
+const itemControllers = require('../controllers/itemControllers');
 const { isAdmin } = require('../middleware/auth');
 
 
@@ -14,6 +15,15 @@ router.get('/dashboard', adminController.getDashboard);
 // New Admin Route
 router.get('/new-admin', adminController.getNewAdmin);
 router.post('/new-admin', adminController.postNewAdmin);
+
+
+// Create New item
+router.post("/new-item", itemControllers.createItem);
+
+// Delete Item
+router.post("/item/delete/:id", itemControllers.deleteItem);
+router.post("/item/edit/:id", itemControllers.updateItem);
+
 
 // Orders Route
 router.get('/orders', adminController.getOrders);
@@ -33,8 +43,8 @@ router.get('/', (req, res) => {
   }});
 
 // Catch all  wrong route to render 404
-router.use((req, res) => {
-  res.status(404).render('404');
-});
+// router.use((req, res) => {
+//   res.status(404).render('404');
+// });
 
 module.exports = router;

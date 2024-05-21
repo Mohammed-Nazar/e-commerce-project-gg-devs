@@ -18,10 +18,7 @@ const mongoose = require("mongoose");
 //   });
 // };
 
-// module.exports = connectToMongo;
-
-const DB_URI = "mongodb+srv://ggdevs:1234@e-commerce.esetu5o.mongodb.net/?retryWrites=true&w=majority&appName=e-commerce&ssl=true";
-
+const DB_URI = process.env.MONGODB_DATABASE_LIVE;
 const url = DB_URI;
 
 const connectToMongo = () => {
@@ -33,4 +30,7 @@ const connectToMongo = () => {
     console.log(err)
   })
 };
+
+
 module.exports = connectToMongo;
+
