@@ -5,7 +5,7 @@ const { getItems } = require('./itemControllers');
 // Render Dashboard Page , crud 4 items later 
 exports.getDashboard = async (req, res) => {
  let items = await getItems();
-  res.render('admin/dashboard', { items: items, adminEmail: req.session.admin.email });
+  res.render('admin/dashboard', { items: items, adminEmail: req.session.admin.email , messageItem: req.session.itemMsg || ""});
 };
 
 // Render New Admin Page for creating a new admin
