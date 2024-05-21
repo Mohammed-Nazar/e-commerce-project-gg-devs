@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Customer Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4e8f3;
+            color: #333;
+        }
+        .navbar-nav .nav-link {
+            color: #555;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #3b71ca;
+        }
+        .ggstore-logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #FF5733;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+        }
+        .carousel-caption {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+        }
+        .carousel-indicators {
+            bottom: -30px;
+        }
+        .carousel-indicators li {
+            background-color: #555;
+        }
+        .carousel-indicators .active {
+            background-color: #3b71ca;
+        }
+        .icon-hover:hover {
+            border-color: #3b71ca !important;
+            background-color: white !important;
+        }
+        .icon-hover:hover i {
+            color: #3b71ca !important;
+        }
+        .card {
+            border: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: #f4e8f3;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        .card-title {
+            font-size: 1.25rem;
+            color: #333;
+        }
+        .card-text {
+            color: #777;
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+        .card-footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            padding: 0.75rem 1.5rem;
+        }
+        .btn-primary {
+            background-color: #3b71ca;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #2b59a1;
+        }
+    </style>
+</head>
+<body>
+  
+    <%- include('../partials/cusnav') %>
+
+    <!-- Hero Slider -->
+    <div id="heroCarousel" class="carousel slide" data-ride="carousel" data-interval="2000">
+        <ol class="carousel-indicators">
+            <li data-target="#heroCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#heroCarousel" data-slide-to="1"></li>
+            <li data-target="#heroCarousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://images.unsplash.com/photo-1715942163355-592c57361b9b?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="d-block w-100" alt="First slide">
+                <div class="carousel-caption d-none d-md-block">
+                    <h3>best stuff</h3>
+
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1715942163442-eae27123c6a9?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="d-block w-100" alt="Second slide">
+                <div class="carousel-caption d-none d-md-block">
+                    <h3>best stuff</h3>
+
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1715942163481-924ff71571d9?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="d-block w-100" alt="Third slide">
+                <div class="carousel-caption d-none d-md-block">
+                    <h3>best stuff</h3>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+    <!-- Hero Slider -->
+
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <header class="mb-4">
+                <h3>Why Choose Us</h3>
+            </header>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="icon-square bg-white text-primary rounded-circle p-3 mr-3">
+                            <i class="fas fa-tags fa-2x"></i>
+                        </div>
+                        <div>
+                            <h5>Reasonable Prices</h5>
+                            <p>We offer competitive prices on our extensive product range.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="icon-square bg-white text-primary rounded-circle p-3 mr-3">
+                            <i class="fas fa-star fa-2x"></i>
+                        </div>
+                        <div>
+                            <h5>Best Quality</h5>
+                            <p>Our products meet the highest quality standards.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-start mb-4">
+                        <div class="icon-square bg-white text-primary rounded-circle p-3 mr-3">
+                            <i class="fas fa-shipping-fast fa-2x"></i>
+                        </div>
+                        <div>
+                            <h5>Fast Shipping</h5>
+                            <p>We provide worldwide shipping with fast delivery.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Features Section -->
+
+    <!-- Products Section -->
+    <section class="container my-5">
+        <header class="mb-4">
+            <h3>New Products</h3>
+        </header>
+
+        <!-- Items will be rendered here after fetching! -->
+        <div class="row">
+            <% items.forEach(item => { %>
+                <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+                    <div class="card w-100 my-2 shadow-sm">
+                        <img src="<%= item.image %>" class="card-img-top" style="aspect-ratio: 1 / 1; object-fit: cover;" alt="<%= item.title %>">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title"><%= item.title %></h5>
+                            <p class="card-text"><%= item.description %></p>
+                            <p class="card-text font-weight-bold">$<%= item.price %></p>
+                            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
+                                <a href="/cart/add/<%= item._id %>" class="btn btn-primary shadow-0 flex-fill">Add to Cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+    <!-- Products Section -->
+
+    <!-- Footer -->
+    <%- include('../partials/cusfooter') %>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
