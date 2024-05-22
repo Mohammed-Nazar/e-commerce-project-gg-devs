@@ -7,6 +7,7 @@ const session = require('express-session');
 
 const connectToMongo = require('./db/connection');
 const adminRoutes = require('./routes/adminRoutes');
+const customerRoutes = require('./routes/customerRoutes')
 const signRoutes = require('./routes/signRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 
@@ -54,6 +55,8 @@ app.use('/', signRoutes);
 
 // Admin Routes
 app.use('/admin', adminRoutes);
+app.use('/customer', customerRoutes); 
+
 
 app.use('/cart', cartRoutes)
 // Serve static files (this should be after  routes to avoid conflicts otherwise html files will render m)

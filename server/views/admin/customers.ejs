@@ -1,37 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Customers</title>
-  <%- include('../partials/head') %>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Customer Home</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+    .card {
+      border: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+      background-color: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    .card-title {
+      font-size: 1.25rem;
+      color: #333;
+    }
+    .card-text {
+      color: #777;
+    }
+    .card-body {
+      padding: 1.5rem;
+    }
+    .card-footer {
+      background-color: #f8f9fa;
+      border-top: 1px solid #e9ecef;
+      padding: 0.75rem 1.5rem;
+    }
+    .btn-primary {
+      background-color: #3b71ca;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #2b59a1;
+    }
+  </style>
 </head>
-<body class="with-welcome-text">
-  <div class="container-scroller">
-    <%- include('../partials/navbar') %>
-    <div class="container-fluid page-body-wrapper">
-      <%- include('../partials/sidebar') %>
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <h3 class="page-title">Customers</h3>
-          <div class="table-responsive mt-4">
-            <table class="table select-table">
-              <thead>
-                <tr>
-                  <th>Customer ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Orders</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Customers Data -->
-              </tbody>
-            </table>
+<body>
+  <%- include('../partials/cusNav', { customer: customer }) %>
+
+  <section class="container my-5">
+    <header class="mb-4">
+      <h3>New Products</h3>
+    </header>
+    <div class="row">
+      <% items.forEach(item => { %>
+        <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
+          <div class="card w-100 my-2 shadow-sm">
+            <img src="<%= item.image %>" class="card-img-top" style="aspect-ratio: 1 / 1; object-fit: cover;" alt="<%= item.title %>">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title"><%= item.title %></h5>
+              <p class="card-text"><%= item.description %></p>
+              <p class="card-text font-weight-bold">$<%= item.price %></p>
+              <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
+                <button class="btn btn-primary shadow-0 flex-fill" onclick="addToCart('<%= item._id %>')">Add to Cart</button>
+              </div>
+            </div>
           </div>
         </div>
-        <%- include('../partials/footer') %>
-      </div>
+      <% }) %>
     </div>
-  </div>
-  <%- include('../partials/scripts') %>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script>
+    function addToCart(itemId) {
+      $.ajax({
+        url: '/cart/add',
+        method: 'POST',
+        data: { itemId },
+        success: function(response) {
+          if (response.success) {
+            alert(response.message);
+          } else {
+            alert(response.message);
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
