@@ -88,3 +88,30 @@ exports.getCheckout = (req, res) => {
 exports.postCheckout = async (req, res) => {
   // Checkout logic
 };
+
+// Profile
+exports.customerProfile = async (req, res) => {
+  const customer_id = req.session.customer_id;
+  const customer = req.session.customer;
+  let msg = req.session.msg;
+  const customerInfo = await Customer.findById({"_id": customer_id})
+  res.render('customer/profile', { cart: req.session.cart, customer, customerInfo, msg:msg });
+};
+
+exports.profileUpdate = async (req, res)=>{
+  const {firstName, LastName, email} = req.body;
+  const customer = await Customer.findOne({ email });
+  if(!customer?.email || customer.id === req.session.customer_id){
+  await Customer.updateOne({"_id": req.session.customer_id},{
+    $set:{
+       name: firstName + " " + LastName,
+       email: email
+    } 
+})
+req.session.msg = "Profile Updated";
+res.status(200).redirect("/customer/profile")
+} else {
+  req.session.msg = "Email already exist";
+  res.redirect("/customer/profile")
+};
+}

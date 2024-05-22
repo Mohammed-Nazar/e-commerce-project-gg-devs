@@ -26,6 +26,8 @@ exports.postSignIn = async (req, res) => {
         return res.status(400).render('signin', { errorMessage: 'Invalid email or password.' });
       }
       req.session.customer = customer;
+      req.session.customer_id = customer.id;
+      console.log(req.session.customer_id)
       res.redirect('/customer/home');
     } else {
       return res.status(400).render('signin', { errorMessage: 'Invalid email or password.' });

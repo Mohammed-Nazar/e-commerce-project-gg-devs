@@ -9,6 +9,11 @@ router.use(isCustomer);
 // Customer Home Route
 router.get('/home', customerController.getHome);
 
+// Customer
+router.get('/profile', customerController.customerProfile);
+router.post('/profile/update', customerController.profileUpdate);
+
+
 // Customer Cart Route
 router.get('/cart', customerController.getCart);
 router.post('/cart/add', customerController.addToCart);
