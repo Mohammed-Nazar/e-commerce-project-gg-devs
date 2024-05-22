@@ -1,4 +1,5 @@
 const ShopItem = require('../models/ShopItem');
+const cart = require('../models/cart');
 const Customer = require('../models/customer');
 
 // Render Home Page
@@ -13,60 +14,34 @@ exports.getHome = async (req, res) => {
 };
 
 // Render Cart Page
-exports.getCart = (req, res) => {
+exports.getCart = async (req, res) => {
   const customer = req.session.customer;
-  res.render('customer/cart', { cart: req.session.cart, customer });
-};
-
-// Add Item to Cart
-exports.addToCart = async (req, res) => {
-  const itemId = req.body.itemId;
-  const quantity = parseInt(req.body.quantity) || 1;
-  const cart = req.session.cart || [];
 
   try {
-    const item = await ShopItem.findById(itemId);
-    if (item) {
-      const cartItem = cart.find(cartItem => cartItem.item._id.equals(item._id));
-      if (cartItem) {
-        cartItem.quantity += quantity;
-      } else {
-        cart.push({ item, quantity });
+    const cartItems = await cart.find({ customerID: customer._id });
+
+    let itemsArray = [];
+    // Loop through each item in the cart and fetch its details from the shopItem collection
+    for (const item of cartItems) {
+      let shopItem = await ShopItem.findOne({ _id: item.itemID });
+      shopItem = {
+        ...shopItem,
+        quantity: item.quantity
       }
-      req.session.cart = cart;
-      res.json({ success: true, message: 'Item added to cart successfully!' });
-    } else {
-      res.status(404).json({ success: false, message: 'Item not found.' });
+      if (shopItem) {
+        // Push the fetched item details to the itemsArray
+        itemsArray.push(shopItem);
+      }
     }
+
+    // Pass the itemsArray to the view for rendering
+    res.render('customer/cart', { cart: itemsArray, customer, cartItems });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error('Error fetching cart items:', error);
+    res.status(500).json({ error: 'Error fetching cart items' });
   }
 };
 
-// Remove Item from Cart
-exports.removeFromCart = (req, res) => {
-  const itemId = req.body.itemId;
-  const cart = req.session.cart || [];
-
-  req.session.cart = cart.filter(cartItem => !cartItem.item._id.equals(itemId));
-  res.json({ success: true, message: 'Item removed from cart successfully!' });
-};
-
-// Update Cart
-exports.updateCart = (req, res) => {
-  const itemId = req.body.itemId;
-  const quantity = parseInt(req.body.quantity);
-  const cart = req.session.cart || [];
-
-  const cartItem = cart.find(cartItem => cartItem.item._id.equals(itemId));
-  if (cartItem) {
-    cartItem.quantity = quantity;
-    req.session.cart = cart;
-    res.json({ success: true, message: 'Cart updated successfully!' });
-  } else {
-    res.status(404).json({ success: false, message: 'Item not found in cart.' });
-  }
-};
 
 // Render Single Item Page
 exports.getSingleItem = async (req, res) => {
@@ -79,9 +54,24 @@ exports.getSingleItem = async (req, res) => {
 };
 
 // Render Checkout Page
-exports.getCheckout = (req, res) => {
+exports.getCheckout = async (req, res) => {
   const customer = req.session.customer;
-  res.render('customer/checkout', { cart: req.session.cart, customer });
+    const cartItems = await cart.find({ customerID: customer._id });
+
+    let itemsArray = [];
+    // Loop through each item in the cart and fetch its details from the shopItem collection
+    for (const item of cartItems) {
+      let shopItem = await ShopItem.findOne({ _id: item.itemID });
+      shopItem = {
+        ...shopItem,
+        quantity: item.quantity
+      }
+      if (shopItem) {
+        // Push the fetched item details to the itemsArray
+        itemsArray.push(shopItem);
+      }
+    }
+  res.render('customer/checkout', { cart: req.session.cart, customer, itemsArray, cartItems });
 };
 
 // Handle Checkout

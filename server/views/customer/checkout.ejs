@@ -69,7 +69,7 @@
             <div class="p-4">
               <h5 class="card-title mb-3">Customer Information</h5>
               <div class="mb-3">
-                <p class="mb-0"><strong>Name:</strong> John Doe</p>
+                <p class="mb-0"><strong>Name:</strong><%= customer.name %></p>
                 <!-- TODO: Fetch and display customer name from database -->
               </div>
       
@@ -77,15 +77,21 @@
               <div class="mb-3">
                 <p class="mb-0"><strong>Items:</strong></p>
                 <ul class="list-unstyled">
-                  <li>Item 1 - $50.00</li>
-                  <li>Item 2 - $30.00</li>
-                  <li>Item 3 - $25.90</li>
+                  <% itemsArray.forEach((item, i)=>{ i++;%>
+                    <li><%= i %>-<%= item._doc.title %> - <%= item._doc.price * item.quantity %>$</li>
+                  <%}) %>
                   <!-- TODO: List items dynamically -->
                 </ul>
               </div>
       
               <div class="mb-3">
-                <p class="mb-0"><strong>Total Price:</strong> $105.90</p>
+                <p class="mb-0"><strong>Total Price:</strong>
+                  <% let totalPrice = 0; %>
+                  <% cartItems.forEach(item => { %>
+                    <% totalPrice += item.price * item.quantity; %>
+                  <% }); %>
+                 $<%= totalPrice + 14 %>
+                </p>
                 <!-- TODO: Calculate total price based on cart items -->
               </div>
       
