@@ -1,5 +1,5 @@
 const ShopItem = require('../models/ShopItem');
-const Customer = require('../models/Customer');
+const Customer = require('../models/customer');
 
 // Render Home Page
 exports.getHome = async (req, res) => {
