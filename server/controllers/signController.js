@@ -8,8 +8,8 @@ exports.getSignIn = (req, res) => {
 
 // Signin logic, need 2 work on validation later 
 exports.postSignIn = async (req, res) => {
-  const { email, password } = req.body;
-
+  let { email, password } = req.body;
+  email = email.toLowerCase();
   try {
     const admin = await Admin.findOne({ email });
     const customer = await Customer.findOne({ email });
@@ -42,7 +42,7 @@ exports.getRegisterCustomer = (req, res) => {
 };
 
 exports.postRegisterCustomer = async (req, res) => {
-  const { name, email, password, confirmPassword } = req.body;
+  let { name, email, password, confirmPassword } = req.body;
   
   try {
     const customer = await Customer.findOne({ email });
@@ -52,6 +52,7 @@ exports.postRegisterCustomer = async (req, res) => {
     if (password !== confirmPassword) {
       return res.status(400).render('register', { errorMessage: 'Password confirmation does not match.' });
     }
+    email = email.toLowerCase();
     const newCustomer = await Customer.create({ name, email, password });
     return res.status(201).render('signin');
   } catch (error) {
