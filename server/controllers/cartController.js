@@ -1,4 +1,5 @@
 const Cart = require('../models/cart');
+const customer = require('../models/customer');
 
 // Get cart for the current customer
 exports.getCart = async (req, res) => {
@@ -30,73 +31,77 @@ exports.deleteCart = async (req, res) => {
 
 // Add an item to the cart
 exports.addCartItem = async (req, res) => {
+    const { customer_id, item_id, price } = req.body;
+
     try {
-        const customerId = req.session.customer._id; // Using session to get the customer ID
-        const { itemId, quantity } = req.body;
+        // Check if the item already exists in the cart
+        let cartItem = await Cart.findOne({ customerID: customer_id, itemID: item_id });
 
-        let cart = await Cart.findOne({ customerRef: customerId });
-
-        if (!cart) {
-            cart = new Cart({ customerRef: customerId, items: [] });
-        }
-
-        const itemIndex = cart.items.findIndex(item => item.itemId === itemId);
-        if (itemIndex > -1) {
-            cart.items[itemIndex].quantity += quantity;
+        if (cartItem) {
+            // If the item exists, increase the quantity
+            cartItem.quantity += 1;
+            await cartItem.save();
+            res.status(200).json(cartItem);
         } else {
-            cart.items.push({ itemId, quantity });
-        }
+            // If the item doesn't exist, create a new cart item
+            const newItem = new Cart({
+                customerID: customer_id,
+                itemID: item_id,
+                price: price,
+                quantity: 1 // Set initial quantity to 1
+            });
 
-        await cart.save();
-        res.status(200).json(cart);
+            const savedItem = await newItem.save();
+            res.status(201).json(savedItem);
+        }
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({ error: 'Error adding item to cart' });
     }
 };
 
 // Update an item in the cart
 exports.updateCartItem = async (req, res) => {
+    const { customer_id, item_id, quantity } = req.body;
+
+
+    if (quantity < 1) {
+        return res.status(400).json({ error: 'Quantity must be at least 1' });
+    }
+
     try {
-        const customerId = req.session.customer._id; // Using session to get the customer ID
-        const { itemId, quantity } = req.body;
+        // Find the cart item by customer ID and item ID
+        let cartItem = await Cart.findOne({ customerID: customer_id, itemID: item_id });
 
-        const cart = await Cart.findOne({ customerRef: customerId });
-
-        if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' });
-        }
-
-        const itemIndex = cart.items.findIndex(item => item.itemId === itemId);
-        if (itemIndex > -1) {
-            cart.items[itemIndex].quantity = quantity;
+        if (cartItem) {
+            // If the item exists, update the quantity
+            cartItem.quantity = quantity;
+            await cartItem.save();
+            res.status(200).json(cartItem);
         } else {
-            return res.status(404).json({ message: 'Item not found in cart' });
+            // If the item doesn't exist, return an error
+            res.status(404).json({ error: 'Item not found in cart' });
         }
-
-        await cart.save();
-        res.status(200).json(cart);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({ error: 'Error updating item in cart' });
     }
 };
 
 // Delete an item from the cart
 exports.deleteCartItem = async (req, res) => {
+    const item_id = req.params;
+    const customer_id = req.session.customerID;
+    console.log(item_id, customer_id)
+
     try {
-        const customerId = req.session.customer._id; // Using session to get the customer ID
-        const { itemId } = req.body;
+        // Find and delete the cart item by customer ID and item ID
+        const cartItem = await Cart.findOneAndDelete({ customerID: customer_id, itemID: item_id });
 
-        const cart = await Cart.findOne({ customerRef: customerId });
-
-        if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' });
+        if (cartItem) {
+            res.status(200).redirect("/");
+        } else {
+            res.status(404).json({ error: 'Item not found in cart' });
         }
-
-        cart.items = cart.items.filter(item => item.itemId !== itemId);
-
-        await cart.save();
-        res.status(200).json(cart);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({ error: 'Error deleting item from cart' });
     }
 };
