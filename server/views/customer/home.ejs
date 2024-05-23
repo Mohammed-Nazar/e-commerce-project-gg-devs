@@ -251,12 +251,22 @@
                     name="customer_id"
                     value="<%= customer._id %>"
                   />
+                  <% if(item.availableCount > 1){ %>
                   <button
                     type="submit"
                     class="btn btn-primary shadow-0 flex-fill"
                   >
                     Add to Cart
                   </button>
+                  <%} else { %>
+                    <button
+                    disabled
+                    type=""
+                    class="btn btn-warning shadow-0 flex-fill"
+                  >
+                    out of stuck
+                  </button>
+                    <%}%>
                 </form>
               </div>
             </div>

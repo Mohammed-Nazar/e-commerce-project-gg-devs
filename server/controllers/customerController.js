@@ -133,54 +133,73 @@ exports.getPayment = async (req, res)=>{
   res.render('customer/payment', { cart: req.session.cart, customer, itemsArray, cartItems });
 }
 
-exports.paymentSuccess = async (req, res)=>{
-  const {country , address, phone, moreInfo} = req.body;
+exports.paymentSuccess = async (req, res) => {
+  const { country, address, phone, moreInfo } = req.body;
   const customer = req.session.customer;
-  const cartItems = await cart.find({ customerID: customer._id });
-  if(cartItems.length == 0){
-    res.redirect("/customer/cart")
-    return false;
+
+  if (!customer) {
+    return res.redirect('/login'); // Ensure user is logged in
   }
+
+  try {
+    const cartItems = await cart.find({ customerID: customer._id });
+
+    if (cartItems.length === 0) {
+      return res.redirect("/customer/cart");
+    }
+
     let itemsArray = [];
-    // Loop through each item in the cart and fetch its details from the shopItem collection
+
+    // Loop through each item in the cart and fetch its details from the ShopItem collection
     for (const item of cartItems) {
-      let shopItem = await ShopItem.findOne({ _id: item.itemID });
-      shopItem = {
-        ...shopItem,
-        quantity: item.quantity
-      }
+      let shopItem = await ShopItem.findOne({ _id: item.itemID }).lean(); // Use lean() to get plain JS object
       if (shopItem) {
-        // Push the fetched item details to the itemsArray
+        shopItem.quantity = item.quantity;
         itemsArray.push(shopItem);
       }
     }
+
     let totalPrice = 0;
-    itemsArray?.forEach((item)=>{
-      totalPrice += item._doc.price * item.quantity;
-    })
-    try{
-      const addOrder = new  order({
-        customer:{
-          customerId: customer._id,
-          name: customer.name,
-          email: customer.email,
-          phone: phone
-        },
-        items: cartItems,
-        shipping:{
-          country: country,
-          address: address
-        },
-        note: moreInfo,
-        totalPaid: totalPrice
-      })
-     const orderSaved =  await addOrder.save();
-      if (orderSaved) {
-       await cart.deleteMany({"customerID": customer._id})
-      }
-      res.render('customer/success')
-    } catch (error) {
-      res.status(500).send(error.message);
+    itemsArray.forEach(item => {
+      totalPrice += item.price * item.quantity;
+    });
+
+    // Create new order
+    const newOrder = new order({
+      customer: {
+        customerId: customer._id,
+        name: customer.name,
+        email: customer.email,
+        phone: phone
+      },
+      items: cartItems,
+      shipping: {
+        country: country,
+        address: address
+      },
+      note: moreInfo,
+      totalPaid: totalPrice
+    });
+
+    const orderSaved = await newOrder.save();
+
+    if (orderSaved) {
+      // Update item quantities in the ShopItem collection
+      await Promise.all(cartItems.map(async (item) => {
+        await ShopItem.findOneAndUpdate(
+          { _id: item.itemID },
+          { $inc: { availableCount: -item.quantity } } // Decrease the quantity by the amount in the cart
+        );
+      }));
+
+      // Clear the cart
+      await cart.deleteMany({ customerID: customer._id });
     }
 
-}
+    res.render('customer/success');
+  } catch (error) {
+    console.error('Error processing payment:', error);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
