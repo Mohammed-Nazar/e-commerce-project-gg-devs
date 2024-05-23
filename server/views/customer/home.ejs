@@ -241,8 +241,9 @@
               <p class="card-text font-weight-bold">$<%= item.price %></p>
               <div
                 class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto"
+                style="background-color: white;"
               >
-                <form class="addItemToCart">
+                <form class="addItemToCart" >
                   <input type="hidden" name="item_id" value="<%= item.id %>" />
                  <input type="hidden" name="price" value="<%= item.price %>" />
                   <input

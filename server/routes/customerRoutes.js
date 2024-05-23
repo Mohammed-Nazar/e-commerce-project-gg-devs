@@ -10,7 +10,7 @@ router.use(isCustomer);
 
 // Customer Cart Route
 router.post('/cart/add', cartController.addCartItem);
-router.post('cart/remove/:id', cartController.deleteCartItem);
+router.get('/cart/remove/:id', cartController.deleteCartItem);
 router.post('/cart/update', cartController.updateCartItem);
 router.get('/cart', customerController.getCart);
 
@@ -29,6 +29,10 @@ router.get('/item/:id', customerController.getSingleItem);
 
 // Checkout Route
 router.get('/checkout', customerController.getCheckout);
-router.post('/checkout', customerController.postCheckout);
+
+
+// payment routes
+router.get('/payment', customerController.getPayment);
+router.post('/payment/success', customerController.paymentSuccess);
 
 module.exports = router;

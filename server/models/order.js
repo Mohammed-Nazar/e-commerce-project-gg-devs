@@ -8,24 +8,17 @@ const orderItemSchema = new mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
-  orderId: { type: String, required: true, unique: true },
   customer: {
     customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: true },
     name: { type: String, required: true },
     email: { type: String, required: true, match: /.+\@.+\..+/ },
     phone: { type: String }
   },
-  items: [orderItemSchema],
-  status: { type: String, required: true },
-  payment: {
-    method: { type: String, required: true },
-    status: { type: String, required: true },
-    transactionId: { type: String }
-  },
+  items: {type: Array},
+  status: { type: String, required: true, default: "In progress" },
   shipping: {
+    country: { type: String, required: true },
     address: { type: String, required: true },
-    method: { type: String },
-    trackingNumber: { type: String }
   },
   orderDates: {
     created: { type: Date, default: Date.now },
@@ -33,17 +26,8 @@ const orderSchema = new mongoose.Schema({
     shipped: { type: Date },
     delivered: { type: Date }
   },
-  amounts: {
-    subtotal: { type: Number, required: true },
-    tax: { type: Number },
-    shippingCost: { type: Number },
-    total: { type: Number, required: true }
-  },
-  discounts: {
-    code: { type: String },
-    amount: { type: Number }
-  },
-  notes: { type: String }
+  note: {type: String},
+  totalPaid: {type: String, required: true}
 });
 
 module.exports = mongoose.model('Order', orderSchema);

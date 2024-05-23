@@ -1,6 +1,7 @@
 const ShopItem = require('../models/ShopItem');
 const cart = require('../models/cart');
 const Customer = require('../models/customer');
+const order = require('../models/order')
 
 // Render Home Page
 exports.getHome = async (req, res) => {
@@ -57,6 +58,10 @@ exports.getSingleItem = async (req, res) => {
 exports.getCheckout = async (req, res) => {
   const customer = req.session.customer;
     const cartItems = await cart.find({ customerID: customer._id });
+  
+    if(cartItems.length == 0){
+      res.redirect("/customer/cart")
+    }
 
     let itemsArray = [];
     // Loop through each item in the cart and fetch its details from the shopItem collection
@@ -74,10 +79,7 @@ exports.getCheckout = async (req, res) => {
   res.render('customer/checkout', { cart: req.session.cart, customer, itemsArray, cartItems });
 };
 
-// Handle Checkout
-exports.postCheckout = async (req, res) => {
-  // Checkout logic
-};
+
 
 // Profile
 exports.customerProfile = async (req, res) => {
@@ -104,4 +106,81 @@ res.status(200).redirect("/customer/profile")
   req.session.msg = "Email already exist";
   res.redirect("/customer/profile")
 };
+}
+
+exports.getPayment = async (req, res)=>{
+  const customer = req.session.customer;
+    const cartItems = await cart.find({ customerID: customer._id });
+
+    if(cartItems.length == 0){
+      res.redirect("/customer/cart")
+      return false;
+    }
+    let itemsArray = [];
+    // Loop through each item in the cart and fetch its details from the shopItem collection
+    for (const item of cartItems) {
+      let shopItem = await ShopItem.findOne({ _id: item.itemID });
+      shopItem = {
+        ...shopItem,
+        quantity: item.quantity
+      }
+      if (shopItem) {
+        // Push the fetched item details to the itemsArray
+        itemsArray.push(shopItem);
+      }
+    }
+    
+  res.render('customer/payment', { cart: req.session.cart, customer, itemsArray, cartItems });
+}
+
+exports.paymentSuccess = async (req, res)=>{
+  const {country , address, phone, moreInfo} = req.body;
+  const customer = req.session.customer;
+  const cartItems = await cart.find({ customerID: customer._id });
+  if(cartItems.length == 0){
+    res.redirect("/customer/cart")
+    return false;
+  }
+    let itemsArray = [];
+    // Loop through each item in the cart and fetch its details from the shopItem collection
+    for (const item of cartItems) {
+      let shopItem = await ShopItem.findOne({ _id: item.itemID });
+      shopItem = {
+        ...shopItem,
+        quantity: item.quantity
+      }
+      if (shopItem) {
+        // Push the fetched item details to the itemsArray
+        itemsArray.push(shopItem);
+      }
+    }
+    let totalPrice = 0;
+    itemsArray?.forEach((item)=>{
+      totalPrice += item._doc.price * item.quantity;
+    })
+    try{
+      const addOrder = new  order({
+        customer:{
+          customerId: customer._id,
+          name: customer.name,
+          email: customer.email,
+          phone: phone
+        },
+        items: cartItems,
+        shipping:{
+          country: country,
+          address: address
+        },
+        note: moreInfo,
+        totalPaid: totalPrice
+      })
+     const orderSaved =  await addOrder.save();
+      if (orderSaved) {
+       await cart.deleteMany({"customerID": customer._id})
+      }
+      res.render('customer/success')
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+
 }

@@ -88,16 +88,16 @@ exports.updateCartItem = async (req, res) => {
 
 // Delete an item from the cart
 exports.deleteCartItem = async (req, res) => {
-    const item_id = req.params;
-    const customer_id = req.session.customerID;
-    console.log(item_id, customer_id)
+    const {id} = req.params;
+    const customer = req.session.customer;
+    const customer_id = customer._id;
 
     try {
         // Find and delete the cart item by customer ID and item ID
-        const cartItem = await Cart.findOneAndDelete({ customerID: customer_id, itemID: item_id });
+        const cartItem = await Cart.findOneAndDelete({ customerID: customer_id, itemID: id });
 
         if (cartItem) {
-            res.status(200).redirect("/");
+            res.status(200).redirect("/customer/cart");
         } else {
             res.status(404).json({ error: 'Item not found in cart' });
         }
