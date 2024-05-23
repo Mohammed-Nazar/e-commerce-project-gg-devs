@@ -1,5 +1,8 @@
 const Admin = require('../models/Admin');
 const { getItems } = require('./itemControllers');
+const allCustomers = require('./../models/customer')
+const order = require('../models/order')
+
 // const bcrypt = require('bcrypt');
 
 // Render Dashboard Page , crud 4 items later 
@@ -35,12 +38,15 @@ exports.postNewAdmin = async (req, res) => {
 };
 
 // Render Orders Page will work later after the customer functions r done
-exports.getOrders = (req, res) => {
-  res.render('admin/orders', { adminEmail: req.session.admin.email });
+exports.getOrders = async (req, res) => {
+  const orders = await order.find({})
+  res.render('admin/orders', { adminEmail: req.session.admin.email, orders });
 };
 
 // Render Customers Page , after building the customers , will fetch em from db in this view 
-exports.getCustomers = (req, res) => {
-  res.render('admin/customers', { adminEmail: req.session.admin.email });
+exports.getCustomers = async (req, res) => {
+  const customer = req.session.customer;
+  const customers = await allCustomers.find({});
+  res.render('admin/customers', { adminEmail: req.session.admin.email,  customer, customers});
 };
 

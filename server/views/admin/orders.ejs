@@ -13,20 +13,39 @@
         <div class="content-wrapper">
           <h3 class="page-title">Orders</h3>
           <div class="table-responsive mt-4">
-            <table class="table select-table">
+            <table class="table">
               <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Customer</th>
-                  <th>Items</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                </tr>
+                  <tr>
+                      <th>Order #</th>
+                      <th>Customer Email</th>
+                      <th>Items #</th>
+                      <th>Total</th>
+                      <th>Status</th>
+                  </tr>
               </thead>
-              <tbody>
-                <!-- Orders Data -->
+              <tbody class="table-body">
+                  <% orders.forEach((order) => { %>
+                      <tr class="cell-1">
+                          <td><%= order._id %></td>
+                          <td><%= order.customer.email %></td>
+                          <td class="overflow-hidden h-100">
+                            <select class="form-select" aria-label="Default select example">
+                              <% order.items.forEach((item)=>{ %>
+                              <option>
+                              ID: <%= item._id %>
+                               ||
+                              Quantity: <%= item.quantity %>
+                              </option>
+                              <%})%>
+                            </select>
+                        </td>                        
+                          <td>$<%= order.totalPaid %></td>
+                          <td><span class="badge <%= order.status === 'In progress' ? 'badge-warning' : 'badge-success' %>"><%= order.status %></span></td>
+                      </tr>
+                      <% }) %>
+                      
               </tbody>
-            </table>
+          </table>
           </div>
         </div>
         <%- include('../partials/footer') %>
