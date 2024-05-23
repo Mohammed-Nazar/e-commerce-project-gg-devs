@@ -203,3 +203,12 @@ exports.paymentSuccess = async (req, res) => {
   }
 };
 
+
+exports.getOrders = async (req,res)=>{
+  const customer = req.session.customer;
+  const orderItems = await order.find({})
+
+ let orders = orderItems.filter((item)=> item.customer.customerId == customer._id);
+ 
+  res.render('customer/orders', {customer , orders})
+}

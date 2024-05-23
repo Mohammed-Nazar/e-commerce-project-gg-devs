@@ -21,7 +21,8 @@ router.get('/home', customerController.getHome);
 router.get('/profile', customerController.customerProfile);
 router.post('/profile/update', customerController.profileUpdate);
 
-
+// orders
+router.get('/orders', customerController.getOrders);
 
 
 // Single Item Route

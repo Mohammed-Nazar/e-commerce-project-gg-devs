@@ -1,34 +1,6 @@
 const Cart = require('../models/cart');
 const customer = require('../models/customer');
 
-// Get cart for the current customer
-exports.getCart = async (req, res) => {
-    try {
-        const customerId = req.session.customer._id; // Using session to get the customer ID
-        const cart = await Cart.findOne({ customerRef: customerId });
-
-        if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' });
-        }
-
-        res.status(200).json(cart);
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
-    }
-};
-
-// Delete cart for the current customer
-exports.deleteCart = async (req, res) => {
-    try {
-        const customerId = req.session.customer._id; // Using session to get the customer ID
-        await Cart.findOneAndDelete({ customerRef: customerId });
-
-        res.status(200).json({ message: 'Cart deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
-    }
-};
-
 // Add an item to the cart
 exports.addCartItem = async (req, res) => {
     const { customer_id, item_id, price } = req.body;
